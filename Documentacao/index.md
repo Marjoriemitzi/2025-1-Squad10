@@ -2,7 +2,7 @@
 
 <p align="center">
  <a href="https://unb-mds.github.io/2025-1-GovInsights/">Git Pages</a>
- <a href="https://govinsights.streamlit.app/">Acesse o Sistema</a>
+ <a href="https://gov-insights.streamlit.app/">Acesse o Sistema</a>
 </p>
 
 ## 📚 Projeto
@@ -13,7 +13,7 @@ Desenvolvido para a disciplina **Métodos de Desenvolvimento de Software - 2025/
 ---
 
 O **GovInsights** é uma plataforma de análise e visualização de dados financeiros públicos, focada inicialmente nos dados do **IPEA**.  
-O projeto busca democratizar o acesso às informações públicas através de relatórios inteligentes e dashboards interativos, utilizando **processamento de linguagem natural** e **visualizações dinâmicas** para facilitar a tomada de decisão e promover a transparência governamental.
+O projeto busca democratizar o acesso às informações públicas através de relatórios inteligentes e dashboards interativos, utilizando **processamento de linguagem natural** e **visualizações dinâmicas**S para facilitar a tomada de decisão e promover a transparência governamental.
 
 ---
 
