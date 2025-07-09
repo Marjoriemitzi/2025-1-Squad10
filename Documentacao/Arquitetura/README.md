@@ -76,7 +76,7 @@ No contexto desse modelo, o **banco de dados (Supabase)** faz parte da **camada 
 | `main.py`     | `interface/`                                 | —                                         |
 | `interface/`  | `services/`, `data/`                         | `main.py`                                 |
 | `services/`   | `data/`                                      | `interface/`                              |
-| `data/`       | —                                            | `services/`                               |
+| `data/`       | —                                            | `interface/`, `services/`                 |
 
 
 ---
