@@ -75,7 +75,7 @@ def landing_page():
                 <h1 class='title'>GOV INSIGHTS</h1>
                 <h3 class='subtitle'>Relatórios inteligentes IPEA</h3>
                 <p class='descricao'>Sistema Inteligente para Análise Automatizada de Notícias e Indicadores Públicos</p>
-                <a href="https://dashgovinsights.streamlit.app/" target="_self">
+                <a href="https://dashgovinsights.streamlit.app/" target="_blank">
                     <button class="report-button">Gerar Relatório</button>
                 </a>
             </div>
