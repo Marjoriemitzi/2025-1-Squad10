@@ -28,8 +28,8 @@ No contexto desse modelo, o **banco de dados (Supabase)** faz parte da **camada 
   - **Plano gratuito:** O plano gratuito do Supabase oferece **1 GB de armazenamento de banco de dados**, o que é suficiente para o armazenamento dos dados por parte deste projeto acadêmico.
 
 #### GitHub Actions
-- **CronJob**: Realiza um serviço assíncrono periódico ao servidor principal consumindo dados do IPEA e realizando consultas e manipulação no banco de dados do projeto a fim de enviar os alertas sobre séries atualizadas.
-  
+- **CronJob**: Realiza dois serviços assíncronos de forma periódico em relação ao servidor principal, um deles consumindo dados do IPEA e realizando consultas e manipulações no banco de dados do projeto a fim de enviar os alertas sobre as séries, e outro executa uma funcionalidade de "keep-alive" que evita a hibernação do servidor principal.
+   
 ### **Visualização da Arquitetura do Projeto**
 
 ![alt text](./diagramas/arquitetura.png)
