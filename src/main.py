@@ -6,7 +6,7 @@ import base64
 def get_img_as_base64(path):
     with open(path, "rb") as img_file:
         return f"data:image/png;base64,{base64.b64encode(img_file.read()).decode()}"
-    
+
 
 def get_base64_of_bin_file(bin_file_path):
     with open(bin_file_path, 'rb') as f:
@@ -15,10 +15,10 @@ def get_base64_of_bin_file(bin_file_path):
 
 
 # Caminhos
-current_dir = Path(__file__).parent
+current_dir = Path(__file__).resolve().parent
 logo_path = current_dir / "interface" / "views" / "assets" / "img" / "Icon.png"
 ilustra_path = current_dir / "interface" / "views" / "assets" / "img" / "home_ilustracao.png"
-main_style_path = current_dir / "interface" / "views" / "assets" /"stylesheets" / "mainStyle.css"
+main_style_path = current_dir / "interface" / "views" / "assets" / "stylesheets" / "mainStyle.css"
 base_img_path = current_dir / "interface" / "views" / "assets" / "img" / "sobre_ilustracao.png"
 equipe_img_path = current_dir / "interface" / "views" / "assets" / "img" / "equipe"
 
@@ -26,7 +26,6 @@ st.set_page_config(
     page_title="Gov Insights",
     page_icon=logo_path,
     layout="wide")
-
 
 if 'page' not in st.session_state:
     st.session_state.page = "landing"
@@ -59,7 +58,7 @@ def landing_page():
             <a href="#equipe">Equipe</a>
         </div>
         <div class="nav-right">
-            <a href="https://dashgovinsights.streamlit.app/" target="_self">
+            <a href="https://dashgovinsights.streamlit.app/" target="_blank">
                 <button class="nav-button Dashboard">Dashboard</button>
             </a>
         </div>
@@ -67,8 +66,8 @@ def landing_page():
     """, unsafe_allow_html=True)
 
     with st.container():
-        # Banner principal 
-        col1, col2 = st.columns([1.1, 0.9]) 
+        # Banner principal
+        col1, col2 = st.columns([1.1, 0.9])
 
         with col1:
             st.markdown("""
@@ -151,7 +150,7 @@ def landing_page():
         </div>
         """, unsafe_allow_html=True)
 
-        # Documetação IPEADATAPY 
+        # Documetação IPEADATAPY
         st.markdown("""
             <div id="ipeadatapy" style="background-color: #F9FBFC; padding: 2rem 4rem; border-radius: 8px;">
                     <h3 id="IPEA" style="color: #1A1A1A;">IPEADATAPY</h3>
@@ -191,14 +190,14 @@ def landing_page():
         ]
 
         profile_links = [
-            "https://github.com/EricAraujoBsB", 
-            "https://github.com/Lithuania0",   
-            "https://github.com/Brwnds",  
-            "https://github.com/Marjoriemitzi", 
-            "https://github.com/mariadenis",    
+            "https://github.com/EricAraujoBsB",
+            "https://github.com/Lithuania0",
+            "https://github.com/Brwnds",
+            "https://github.com/Marjoriemitzi",
+            "https://github.com/mariadenis",
             "https://github.com/GFlyan",
-            "https://github.com/eduardar0",  
-            "https://github.com/gabegmbr",    
+            "https://github.com/eduardar0",
+            "https://github.com/gabegmbr",
         ]
 
         # Caminho das imagens
@@ -218,6 +217,7 @@ def landing_page():
             </div>
         </div>
         """, unsafe_allow_html=True)
+
 
 if st.session_state.page == "landing":
     landing_page()
