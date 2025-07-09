@@ -173,7 +173,7 @@ def del_alertas_page():
     
     if st.button("Desativar Alerta"):
         try:
-            deletar_serie(email, serie)
+            deletar_serie(serie, email)
             st.success("Alerta deletado com sucesso!")
         except Exception as error:
-            st.warning("Erro ao deletar serie no BD")
+            st.warning("Erro ao excluir alerta, favor verique as entradas")
