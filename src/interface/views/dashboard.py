@@ -30,12 +30,12 @@ else:
 
 # --- 5. Importações de módulos e funções do Back-end/Outros módulos (APÓS st.set_page_config) ---
 # Importação de tela de alerta
-from alertas import alertas_page
+from alertas import alertas_page, del_alertas_page
 
 # Importação de funções do backEnd
 from services.search import SearchService
 from services.graph import timeSeries
-from services.ia import gerar_relatorio
+from services.ia import gerar_relatorio_com_busca_externa_stream
 from services.pdf import gerar_pdf
 
 # --- 6. Inicialização dos estados da sessão ---
@@ -143,6 +143,9 @@ with st.sidebar:
     if st.button("Alertas", key="btn_alertas_sidebar"):
         change_page("Alertas")
 
+    if st.button("Deletar Alertas", key="btn_del_alertas"):
+        change_page("del_Alertas")
+
     if st.button("Dashboard", key="btn_dashboard_sidebar"):
         change_page("Dashboard")
 
@@ -151,21 +154,19 @@ with st.sidebar:
 # --- 9. Definição da Página Principal (main_page) ---
 def main_page():
     # cabeçalho
-    col1, col2 = st.columns([1, 14])
-    with col1:
-        st.image(str(img_path), width=80)
-    with col2:
-        st.markdown("""
-        <div style="display: flex; align-items: left; height: 100%; justify-content: flex-start;">
-            <h3 style="margin-left: 10px;">
-                Gov Insights <br>
-                <p>Relatórios inteligentes IPEA</p>
-            </h3>
+    st.markdown("""
+    <div style="display: flex; align-items: center; height: 100%; justify-content: flex-start; gap: 12px; margin: 0 0 30px 0">
+        <img src="app/static/img/govinsights_logo.png" width=52px height=52px>
+        <div style="display: flex; flex-direction: column; justify-content: center;">
+            <h3 style="margin: 0; padding: 0">Gov Insights</h3>
+            <h5 style="color: #b0b0b0; margin: -4px 0 0 0; padding: 0">Relatórios Inteligentes</h5>
         </div>
-        """, unsafe_allow_html=True)
+        
+    </div>
+    """, unsafe_allow_html=True)
 
-    col3, col4 = st.columns([4, 2])
-    with col3:
+    col1, col4 = st.columns([4, 2], gap="medium")
+    with col1:
         local_serie_selecionada = None
         if serie_selecionada:
             local_serie_selecionada = st.session_state.get('serie_estatistica')['CODE']
@@ -176,11 +177,12 @@ def main_page():
 
             info_serie = serie.descricao
             criar_pills_periodo_analise(st.session_state['frequencia'])
-
+            
             periodo_atual = st.session_state.get('periodo_analise')
             if periodo_atual and periodo_atual in serie.percentuais and serie.percentuais[periodo_atual] is not None:
                 color_indicator = "#2BB17A" if serie.percentuais[periodo_atual] >= 0 else "#f0423c"
-                text_indicator = ("↑ " if serie.percentuais[periodo_atual] >= 0 else "↓ ") + str(serie.percentuais[periodo_atual]) + "%"
+                current_value = info_serie.iloc[9,0] + " " + str(round(serie.dados_periodos[periodo_atual].iloc[-1, 5], 2))
+                text_indicator = current_value + " " + ("↑ " if serie.percentuais[periodo_atual] >= 0 else "↓ ") + str(serie.percentuais[periodo_atual]) + "%"
             else:
                 color_indicator = "#CCCCCC"
                 text_indicator = "N/A"
@@ -208,6 +210,14 @@ def main_page():
                 )
             else:
                 st.warning("Gráfico não disponível para o período selecionado ou dados insuficientes.")
+            st.expander("Descrição da série estatística", expanded=False, icon=":material/description:").html(
+                serie.descricao.iloc[6,0] if not info_serie.empty else 'Descrição não disponível')
+            st.html("""
+                    <div style="display: flex; flex-direction: row; align-items: center; gap: 8px">
+                        <h4 style="color: white; font-size: 16px; font-weight: 500;">Dados fornecidos pelo</h4>
+                        <img src="/app/static/img/ipea.png" width="50px" style="margin: 0; padding: 0;"/>
+                    </div>
+                    """)
         else:
             st.markdown("""
                 <div class="painel" style="border: 1px solid #2BB17A; background-color: #101120; padding: 16px; border-radius: 8px;">
@@ -221,47 +231,83 @@ def main_page():
     with col4:
         response = None
         pdf_bytes = None
-        if local_serie_selecionada:
-            if st.button("Gerar Relatório Inteligente", key="btn_relatorio_ia"):
-                try:
-                    if 'serie_obj' not in st.session_state or st.session_state.get('last_serie_selecionada') != local_serie_selecionada:
-                        st.session_state['serie_obj'] = obter_obj_serie(local_serie_selecionada, st.session_state['frequencia'])
-                        st.session_state['last_serie_selecionada'] = local_serie_selecionada
-                    serie = st.session_state['serie_obj']
+        
+        # Container sempre presente com altura limitada
+        with st.container(height=700):
+            if local_serie_selecionada:
+                if st.button("Gerar Relatório Inteligente", key="btn_relatorio_ia"):
+                    try:
+                        if 'serie_obj' not in st.session_state or st.session_state.get('last_serie_selecionada') != local_serie_selecionada:
+                            st.session_state['serie_obj'] = obter_obj_serie(local_serie_selecionada, st.session_state['frequencia'])
+                            st.session_state['last_serie_selecionada'] = local_serie_selecionada
+                        serie = st.session_state['serie_obj']
+                        
+                        periodo_analise_ia = st.session_state.get('periodo_analise')
+                        dfSerie = serie.dados_periodos.get(periodo_analise_ia)
 
-                    periodo_analise_ia = st.session_state.get('periodo_analise')
-                    dfSerie = serie.dados_periodos.get(periodo_analise_ia)
+                        if dfSerie is None or dfSerie.empty:
+                            st.error("Nenhum dado encontrado para a série ou período informado para análise de IA.")
+                        else:
+                            st.subheader("Análise inteligente")
+                            
+                            # Container para exibir texto em tempo real
+                            response_container = st.empty()
+                            
+                            # Inicializar variáveis para streaming
+                            accumulated_text = ""
+                            
+                            def update_display(new_text):
+                                nonlocal accumulated_text
+                                accumulated_text += new_text
+                                response_container.markdown(accumulated_text)
+                            
+                            # Gerar relatório com streaming
+                        with st.spinner("Gerando relatório inteligente... Aguarde, isso pode levar alguns minutos."):
+                            try:
+                                response = gerar_relatorio_com_busca_externa_stream(
+                                    local_serie_selecionada, 
+                                    dfSerie,
+                                    callback=update_display
+                                )
+                                
+                                # Atualizar com resposta final
+                                if response:
+                                    response_container.markdown(response)
+                                    st.success("✅ Análise concluída!")
+                                    
+                                    # Salvar no session_state para persistir
+                                    st.session_state['relatorio_gerado'] = response
+                                    st.session_state['relatorio_serie'] = local_serie_selecionada
+                                    
+                                    # Gerar PDF
+                                    with open(gerar_pdf(codSerie=local_serie_selecionada, dfSerie=dfSerie, iaText=response), "rb") as file:
+                                        pdf_bytes = file.read()
+                                        st.session_state['pdf_bytes'] = pdf_bytes
+                                else:
+                                    st.error("❌ Erro ao gerar análise")
+                            except Exception as e:
+                                st.error(f"❌ Erro na análise: {str(e)}")
+                                response_container.markdown("Erro ao gerar análise. Tente novamente.")
 
-                    if dfSerie is None or dfSerie.empty:
-                        st.error("Nenhum dado encontrado para a série ou período informado para análise de IA.")
-                    else:
-                        st.subheader("Análise inteligente")
-                        with st.spinner("Gerando análise..."):
-                            response = gerar_relatorio(local_serie_selecionada, dfSerie)
+                    except Exception as e:
+                        st.error(f"❌ Erro geral: {str(e)}")
+                        
+                # Exibir relatório se já foi gerado E não está sendo gerado agora
+                elif 'relatorio_gerado' in st.session_state and st.session_state.get('relatorio_serie') == local_serie_selecionada:
+                    st.markdown(st.session_state['relatorio_gerado'])
+                    
+            else:
+                # Container vazio quando não há série selecionada
+                st.markdown("")
 
-                        if response:
-                            with open(gerar_pdf(codSerie=local_serie_selecionada, dfSerie=dfSerie, iaText=response), "rb") as file:
-                                pdf_bytes = file.read()
-
-                    with st.container(height=600):
-                        if response:
-                            st.markdown(response)
-                        elif local_serie_selecionada and (dfSerie is None or dfSerie.empty):
-                            st.info("Não foi possível gerar a análise de IA. Verifique os dados da série ou o período selecionado.")
-                        elif local_serie_selecionada:
-                            st.warning("Análise de IA não gerada. Verifique as configurações da API ou os dados.")
-                except Exception as e:
-                    st.error(f"Erro na análise de IA: {e}")
-        else:
-            st.markdown('''#### ''')
-
-    if pdf_bytes:
-        st.download_button(
-            label="Exportar Relatório",
-            data=pdf_bytes,
-            file_name="relatorio.pdf",
-            mime="application/pdf"
-        )
+        # Botão de download fora do container (sempre visível quando há PDF)
+        if local_serie_selecionada and 'pdf_bytes' in st.session_state and st.session_state.get('relatorio_serie') == local_serie_selecionada:
+            st.download_button(
+                label="Exportar Relatório",
+                data=st.session_state['pdf_bytes'],
+                file_name="relatorio.pdf",
+                mime="application/pdf"
+            )
 
 # --- 10. Controle de Páginas (Último bloco no script principal) ---
 if st.session_state.current_page == "Dashboard":
@@ -274,10 +320,24 @@ elif st.session_state.current_page == "Alertas":
         body.classList.add('sidebar-hidden');
     </script>
 """, unsafe_allow_html=True)
-    css_path = current_dir / "assets" / "stylesheets" / "style2.css"
+    css_path = current_dir / "assets" / "stylesheets" / "styleAlertas.css"
     if css_path.exists():
         with open(css_path) as f:
             st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
     else:
         st.warning("Arquivo CSS não encontrado em: " + str(css_path))
     alertas_page()
+elif st.session_state.current_page == "del_Alertas":
+    st.markdown("""
+        <script>
+            const body = window.parent.document.querySelector('body');
+            body.classList.add('sidebar-hidden');
+        </script>
+        """, unsafe_allow_html=True)
+    css_path = current_dir / "assets" / "stylesheets" / "styleAlertas.css"
+    if css_path.exists():
+        with open(css_path) as f:
+            st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
+    else:
+        st.warning("Arquivo CSS não encontrado em: " + str(css_path))
+    del_alertas_page()

@@ -14,7 +14,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../.
 
 
 from services.search import SearchService
-from data.operacoes_bd import inserir_nova_serie
+from data.operacoes_bd import inserir_nova_serie, deletar_serie
 
 if 'current_page' not in st.session_state:
     st.session_state.current_page = "Dashboard"
@@ -48,7 +48,42 @@ def change_page(page_name):
 #             """
 #     st.markdown(detalhes_alerta, unsafe_allow_html=True)
 
+
 def alertas_page():
+#    st.markdown("""                SIDEBAR FECHADA
+# <style>
+# /* Esconder sidebar */
+# section[data-testid="stSidebar"] {
+#    display: none !important;
+# }
+#
+# /* conteúdo ocupa a tela toda */
+# div[class^="main"] {
+#     margin-left: 0rem !important;
+# }
+# </style>
+# """, unsafe_allow_html=True)
+
+#    st.markdown("""
+#    <script>
+#    window.addEventListener('load', function () {
+#        const sidebar = window.parent.document.querySelector('section[data-testid="stSidebar"]');
+#        if (sidebar) {
+#            sidebar.style.transform = 'translateX(-100%)';
+#            sidebar.style.visibility = 'hidden';
+#            sidebar.style.width = '0px';
+#            sidebar.style.padding = '0px';
+#        }
+#
+#        const mainContent = window.parent.document.querySelector('.main');
+#        if (mainContent) {
+#            mainContent.style.marginLeft = '0px';
+#        }
+#    });
+#    </script>
+#""", unsafe_allow_html=True)
+
+
     st.title("Alertas")
     email = st.text_input("Digite seu e-mail para receber alertas")
 
@@ -122,4 +157,23 @@ def alertas_page():
                     st.success("Alerta configurado com sucesso!")
                 except Exception as error:
                     st.warning("Erro ao comunicar com BD")
+                    
 
+def del_alertas_page():
+    st.title("Cancelar Inscrição de Alertas")
+    email = st.text_input("Endereço de email:")
+    serie = st.text_input("Código da Série:")
+
+    st.markdown("""
+        <div id="text_del">
+            <p id="text_lam">Lamentamos que você esteja se desvinculando do nosso sistema. Esperamos ter sido úteis durante o período em que nos acompanhou.</p>
+            <p id="exp">Ao continuar, você deixará de receber alertas relacionados a essa configuração. Se desejar, poderá ativá-los novamente a qualquer momento nas configurações.</p>
+        </div>
+    """, unsafe_allow_html=True)
+    
+    if st.button("Desativar Alerta"):
+        try:
+            deletar_serie(email, serie)
+            st.success("Alerta deletado com sucesso!")
+        except Exception as error:
+            st.warning("Erro ao deletar serie no BD")
