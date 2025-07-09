@@ -27,6 +27,8 @@ No contexto desse modelo, o **banco de dados (Supabase)** faz parte da **camada 
   - **Fácil integração:** O Supabase oferece uma solução prática e de fácil integração com o Streamlit, o que facilita a conexão entre o backend Python e o banco de dados PostgreSQL através de métodos nativos do próprio Supabase.
   - **Plano gratuito:** O plano gratuito do Supabase oferece **1 GB de armazenamento de banco de dados**, o que é suficiente para o armazenamento dos dados por parte deste projeto acadêmico.
 
+#### GitHub Actions
+- **CronJob**: Realiza um serviço assíncrono periódico ao servidor principal consumindo dados do IPEA e realizando consultas e manipulação no banco de dados do projeto a fim de enviar os alertas sobre séries atualizadas.
   
 ### **Visualização da Arquitetura do Projeto**
 
@@ -53,12 +55,12 @@ No contexto desse modelo, o **banco de dados (Supabase)** faz parte da **camada 
 ### 🔷`services/`
 - **Função:** Lógica de negócio.
 - **Tecnologias:** Python, API IPEA, Pandas, DeepSeek R1 Distill Llama 70B Free, Plotly.
-- **Responsável por:** Conectar-se à biblioteca `ipeadatapy` para obter séries financeiras, processando e gerando relatórios financeiros com o modelo gratuito de LLM DeepSeek R1 Distill Llama 70B Free através da biblioteca together fornecida pela empresa Together.ai.
+- **Responsável por:** Conectar-se à biblioteca `ipeadatapy` para obter séries financeiras, processando e gerando relatórios financeiros com o modelo gratuito de LLM DeepSeek R1 Distill Llama 70B Free através da biblioteca together fornecida pela empresa Together.ai, armazena também a camada responsável pelo algoritmo de envio de alertas.
 
 ### 🔷`data/`
 - **Função:** Interação com o banco de dados.
 - **Tecnologias:** Supabase, Python.
-- **Responsável por:** Gerenciar a conexão com o banco de dados hospedado no Supabase baseado em PostgreSQL, realizando operações de busca e inserção de dados sobre séries financeiras escolhidas pelo usuário à serem alertadas de acordo com atualizações.
+- **Responsável por:** Gerenciar a conexão com o banco de dados hospedado no Supabase baseado em PostgreSQL, realizando operações de busca, inserção e remoção de dados sobre séries financeiras escolhidas pelo usuário à serem alertadas de acordo com atualizações.
 
 ### 🔷`main.py`
 - **Função:** Ponto de entrada da aplicação.
@@ -71,9 +73,9 @@ No contexto desse modelo, o **banco de dados (Supabase)** faz parte da **camada 
 
 | Diretório     | Pode chamar...                              | Pode ser chamado por...                   |
 |---------------|----------------------------------------------|-------------------------------------------|
-| `main.py`     | `interface/`                                        | —                                         |
-| `interface/`  | `services/`                                  | `main.py`                                 |
-| `services/`   | `data/`                                       | `interface/`                              |
+| `main.py`     | `interface/`                                 | —                                         |
+| `interface/`  | `services/`, `data/`                         | `main.py`                                 |
+| `services/`   | `data/`                                      | `interface/`                              |
 | `data/`       | —                                            | `services/`                               |
 
 
