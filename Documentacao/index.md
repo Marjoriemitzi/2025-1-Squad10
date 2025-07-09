@@ -1,7 +1,8 @@
 <h1 align="center" style="font-weight: bold;">📊 GovInsights - Análise de Dados Públicos  </h1>
 
 <p align="center">
- <a href="https://unb-mds.github.io/2025-1-Squad10/">Git Pages</a>
+ <a href="https://unb-mds.github.io/2025-1-GovInsights/">Git Pages</a>
+ <a href="https://govinsights.streamlit.app/">Acesse o Sistema</a>
 </p>
 
 ## 📚 Projeto
@@ -157,7 +158,7 @@ sudo apt install python3-dev python3-pip python3-venv
 - Clone o repositório utilizando o comando:
 
 ```
-git clone https://github.com/unb-mds/2025-1-Squad10.git
+git clone https://github.com/unb-mds/2025-1-GovInsights.git
 ```
 
 ## Criando e ativando um ambiente virtual do Python
@@ -165,7 +166,7 @@ git clone https://github.com/unb-mds/2025-1-Squad10.git
 - Vá a pasta do repositório
 
 ```
-cd 2025-1-Squad10
+cd 2025-1-GovInsights
 ```
 
 -  Crie um ambiente virtual do Python
@@ -195,6 +196,12 @@ python3 -m pip install --upgrade pip
 - Instale as dependências do projeto com o comando:
 ```
  pip install -r requirements.txt 
+```
+
+- Execute o sistema a partir da pasta src
+
+```
+streamlit run .\src\main.py
 ```
 ---
 
