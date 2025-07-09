@@ -136,12 +136,12 @@ def enviar_email(codigo_serie: str, email_usuario: str, margem: float):
                     <li>Realize exportação de dados</li>
                     <li><strong>Ação recomendada:</strong> em até 48h</li>
                 </ul>
-                <a href="https://painel.govinsights.com.br/analise?serie={codigo_serie}" class="button">Ver análise completa</a>
+                <a href="https://dashgovinsights.streamlit.app/" class="button">Ir para o GovInsights</a>
             </div>
             <div class="footer">
-                GOV INSIGHTS • SQUAD 10<br>
                 Este é um e-mail automático, não responda.<br>
-                <a href="https://govinsights.com.br/unsubscribe?email={email_usuario}" style="color: #888;">Cancelar inscrição</a>
+                Caso deseje cancelar sua inscrição acesse nosso site.<br>
+                Atenciosamente, GovInsights©.<br>
             </div>
         </div>
     </body>
