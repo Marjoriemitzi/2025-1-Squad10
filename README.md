@@ -2,7 +2,7 @@
 
 <p align="center">
   <a href="https://unb-mds.github.io/2025-1-GovInsights/">Git Pages</a> </br>
-  <a href="https://govinsights-landing-page.streamlit.app/">Acesse o Sistema</a>
+  <a href="https://govinsights.streamlit.app/">Acesse o Sistema</a>
 </p>
 
 ## 📚 Projeto
