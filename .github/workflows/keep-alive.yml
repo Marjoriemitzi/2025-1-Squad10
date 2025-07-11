@@ -16,8 +16,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Nome do passo
-      - name: Send GET request to Streamlit app
-        # O comando que será executado
-        # Use o 'curl' para enviar uma requisição HTTP para a URL da sua aplicação
-        run: curl -s "https://2025-1-govinsights.streamlit.app/"
+      # Use o 'curl' para enviar uma requisição HTTP para a URL da sua aplicação
+      - name: Wake up govinsights.streamlit.app
+        run: curl -A "Mozilla/5.0" -s "https://govinsights.streamlit.app/" || true
+
+      - name: Wake up dashgovinsights.streamlit.app
+        run: curl -A "Mozilla/5.0" -s "https://dashgovinsights.streamlit.app/" || true
