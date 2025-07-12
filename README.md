@@ -1,4 +1,4 @@
-<h1 align="center" style="font-weight: bold;">📊 GovInsights - Análise de Dados Públicos  </h1>
+<img width="1098" height="574" alt="image" src="https://github.com/user-attachments/assets/6e2a6cb7-6a9a-400a-8ac4-3ce038ba2bb9" />
 
 <p align="center">
   <a href="https://unb-mds.github.io/2025-1-GovInsights/">Git Pages</a> </br>
