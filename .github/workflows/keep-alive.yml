@@ -1,24 +1,46 @@
-# Nome do Workflow
-name: Keep Streamlit App Alive
+name: Keep Alive
 
-# Gatilho (trigger) do workflow
 on:
   schedule:
-    # Executa a cada 15 minutos. A sintaxe é de cron job.
-    # '*/15' -> a cada 15 minutos
-    # '*' -> toda hora, todo dia do mês, todo mês, todo dia da semana
-    - cron: '*/15 * * * *'
+    - cron: "*/15 * * * *"  
 
 jobs:
-  # Nome do job
-  wake-up:
-    # O tipo de máquina virtual para executar o job
+  ping-with-browser:
     runs-on: ubuntu-latest
-
     steps:
-      # Use o 'curl' para enviar uma requisição HTTP para a URL da sua aplicação
-      - name: Wake up govinsights.streamlit.app
-        run: curl -A "Mozilla/5.0" -s "https://govinsights.streamlit.app/" || true
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
 
-      - name: Wake up dashgovinsights.streamlit.app
-        run: curl -A "Mozilla/5.0" -s "https://dashgovinsights.streamlit.app/" || true
+      - name: Install Puppeteer
+        run: npm install puppeteer
+
+      - name: Load Streamlit Apps
+        run: |
+          node -e "
+          const puppeteer = require('puppeteer');
+          (async () => {
+            const browser = await puppeteer.launch({
+              headless: 'new',
+              args: ['--no-sandbox']
+            });
+            const page = await browser.newPage();
+
+            // Primeiro app
+            console.log('Acessando govinsights...');
+            await page.goto('https://govinsights.streamlit.app/', { waitUntil: 'networkidle2' });
+            await new Promise(r => setTimeout(r, 5000));
+
+            // Espera entre os acessos
+            console.log('Esperando 10s...');
+            await new Promise(r => setTimeout(r, 10000));
+
+            // Segundo app
+            console.log('Acessando dashgovinsights...');
+            await page.goto('https://dashgovinsights.streamlit.app/', { waitUntil: 'networkidle2' });
+            await new Promise(r => setTimeout(r, 5000));
+
+            await browser.close();
+            console.log('Finalizado.');
+          })();
+          "
