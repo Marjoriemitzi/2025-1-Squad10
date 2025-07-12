@@ -23,7 +23,7 @@ base_img_path = current_dir / "interface" / "views" / "assets" / "img" / "sobre_
 equipe_img_path = current_dir / "interface" / "views" / "assets" / "img" / "equipe"
 
 st.set_page_config(
-    page_title="Gov Insights",
+    page_title="GovInsights",
     page_icon=logo_path,
     layout="wide")
 
