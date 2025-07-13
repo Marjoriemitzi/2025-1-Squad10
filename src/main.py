@@ -159,7 +159,7 @@ def landing_page():
                     Isso afasta o cidadão comum e desacelera a gestão pública eficiente.
                 </p>
                 <p style="font-size: 1.3rem; font-weight: bold; line-height: 1.6; color: #1A1A1A; margin-bottom: 0.9rem;">
-                    O Gov Insights traduz grandes volumes de dados e notícias em insights claros, rápidos e visualmente acessíveis.
+                    O GovInsights traduz grandes volumes de dados e notícias em insights claros, rápidos e visualmente acessíveis.
                 </p>
                 <p style="font-size: 1.1rem; line-height: 1.6; color: #1A1A1A; margin-bottom: 1rem;">
                     Para isso, utilizamos a API <strong>ipeadatapy</strong>, uma biblioteca que permite acesso programático aos dados públicos do <strong>Instituto de Pesquisa Econômica Aplicada (IPEA)</strong>.
